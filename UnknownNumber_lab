@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include "cmath"
 
 enum Grade
 {
@@ -34,7 +35,7 @@ std::vector<Student> LoadStudents()
 				{ "cs", Grade::A },
 				{ "english", Grade::A },
 				{ "dutch", Grade::B },
-				{ "Russian Literature", Grade::A},
+				
 			}
 		},
 		{
@@ -43,7 +44,7 @@ std::vector<Student> LoadStudents()
 				{ "math", Grade::A },
 				{ "cs", Grade::B },
 				{ "dutch", Grade::C },
-				{ "Russian Literature", Grade::B },
+				
 			}
 		},
 		{
@@ -51,7 +52,7 @@ std::vector<Student> LoadStudents()
 			{
 				{ "math", Grade::F },
 				{ "english", Grade::F },
-				{ "Russian Literature", Grade::F },
+				
 			}
 		},
 		{
@@ -61,7 +62,7 @@ std::vector<Student> LoadStudents()
 				{ "english", Grade::F },
 				{ "cs", Grade::B },
 				{ "dutch", Grade::C },
-				{ "Russian Literature", Grade::B },
+				
 			}
 		},
 		{
@@ -71,14 +72,14 @@ std::vector<Student> LoadStudents()
 				{ "english", Grade::F },
 				{ "dutch", Grade::C },
 				{ "cs", Grade::C },
-				{ "Russian Literature", Grade:: C},
+				
 			}
 		},
 		{
 			"Masha", "G2",
 			{
 				{ "math", Grade::A },
-				{ "Russian Literature", Grade::A },
+				
 			}
 		},
 		{
@@ -87,25 +88,39 @@ std::vector<Student> LoadStudents()
 				{ "english", Grade::F },
 				{ "russian", Grade::F },
 				{ "dutch", Grade::F },
-				{ "Russian Literature", Grade::F },
+				
 			}
 		},
 		{
 			"Jeka", "G2",
 			{
 				{ "english", Grade::A },
-				{ "Russian Literature", Grade::A },
+				
 			}
 		},
 		{
 			"Sveta", "G3",
 			{
-				{ "Russian Literature", Grade::F },
+				
 			}
 		}
 	};
 }
 
+struct NewSubj
+{
+	void operator() (Student& a)
+	{
+		float Mark_Lit = 0;
+		for (auto itLit = a.Grades.begin(); itLit != a.Grades.end(); ++itLit)
+		{
+			Mark_Lit += itLit->second;
+		}
+		Mark_Lit /= a.Grades.size();
+		int Mark_Lit2 = (int)ceil(Mark_Lit);
+		a.Grades.insert(std::pair<std::string, Grade>("Russian Literature",(Grade) Mark_Lit2));
+	}
+};
 
 struct mathBcsA
 {
@@ -188,8 +203,13 @@ int main()
 	// find students from G7
 	std::for_each(students.begin(), students.end(), PrintbyGroup{ "G7" });
 	std::cout << "------------------\n";
+	
 	// deutsch marks
 	std::for_each(students.begin(), students.end(), PrintbyDeutsch());
+	std::cout << "------------------\n";
+
+	//insert Litra
+	std::for_each(students.begin(), students.end(), NewSubj());
 	std::cout << "------------------\n";
 	// max subjects
 	auto it = std::max_element(students.begin(), students.end(), subj_compare);
