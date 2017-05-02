@@ -62,7 +62,7 @@ public:
 		for (size_t i = 0; i < v.size(); ++i)
 		{
 			ValueVect.push_back(v[0]);
-			for (size_t j = 0; j < v.size() - 2; ++j)
+			for (size_t j = 0; j < v.size() - 1; ++j)
 			{
 				if (v[j] == v[j + 1])
 				{
@@ -92,18 +92,14 @@ public:
 //	// тогда АНФ boolean_function будет равна x + y + xy + zx + zy + zyx
 	boolean_function(unsigned long long value, size_type n)
 	{
-		std::vector <bool> BufVect;
 		
 		for (int i = 0; i < pow(2, n); ++i)
 		{
 
-			BufVect.push_back(value % 2);
+			ValVect.push_back(value % 2);
 			value /= 2;
 		}
-		for (int i = 0; i < pow(2, n); ++i)
-		{	
-				ValVect.push_back(BufVect[BufVect.size() - i - 1]);
-		}
+		
 	}
 //
 //	// пусть table = "01110000"
@@ -232,14 +228,15 @@ public:
 //	// logic_error если фунции не сравнимы
 	bool operator >= (const boolean_function& rhs) const
 	{
-
 		if (ValVect.size() != rhs.ValVect.size())
 		{
-			throw std::exception("wrong format");
+			throw std::logic_error("not comparable");
 		}
-
 		int prov = 0;
-		
+		if (ValVect == rhs.ValVect)
+		{
+			return true;
+		}
 		for (size_t i = 0; i < ValVect.size(); i++)
 		{	
 			if ((size_t)ValVect[i] < (size_t)rhs.ValVect[i])
