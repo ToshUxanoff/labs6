@@ -56,7 +56,7 @@ It Sorter(It begin, It end, Cmp cmp)
 		}
 		Position = i;
 		i = begin;
-		while ((Position > i) && cmp(*i, *Position))
+		while ((Position > i) && !cmp(*Position, *i))
 		{
 			++i;
 		}
@@ -74,7 +74,11 @@ It Sorter(It begin, It end, Cmp cmp)
 }
 
 int main() {
-	std::vector<int> test{ 11,5,7,12,14,9,4,124,54259,3295803,19,459,53280,10,0 };
+	std::vector<int> test;
+	for (int i = 0; i < 1000; ++i)
+	{
+		test.push_back(rand()%1000);
+	}
 	print(test.begin(), test.end());
 	qsort(test.begin(), test.end(), std::less<int>());
 	std::cout << "\n------------------------\n";
