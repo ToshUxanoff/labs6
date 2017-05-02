@@ -342,7 +342,7 @@ public:
 		std::vector<bool> BufVect = ValVect;
 		for (size_t i = 0; i < BufVect.size(); ++i)
 		{
-			if (BufVect[i] == BufVect[BufVect.size() - i]) ///0101 - 0101 
+			if (BufVect[i] == BufVect[BufVect.size() - i - 1]) ///0101 - 0101 
 			{
 				return false;
 			}
@@ -363,7 +363,7 @@ public:
 	}
 	bool is_T1() const
 	{
-		return ValVect[ValVect.size()] == 1;
+		return ValVect[ValVect.size()-1] == 1;
 	}
 	bool is_T0() const
 	{
