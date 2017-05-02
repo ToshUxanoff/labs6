@@ -400,7 +400,7 @@ public:
 		for (size_t i = 0; i < size(); ++i)
 		{
 			AnfVect.push_back(BufVect[0]);
-			for (size_t j = 0; j < size() - 2; ++j)
+			for (size_t j = 0; j < size() - 1; ++j)
 			{
 				if (BufVect[j] ==  BufVect[j + 1])
 				{
