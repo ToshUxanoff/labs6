@@ -2,87 +2,62 @@
 #include <iostream>
 #include <vector>
 
-template <class It>
-void print(It begin, It end)
+template<class It, class Cmp>
+void qsort(It beg, It end, Cmp cmp)
 {
-	for (It i = begin; i != end; ++i)
+	if (beg != end) {
+		It Left = beg;
+		It Right = end;
+		It Piv = beg;
+		++Left;
+		while (Left != Right) 
+		{
+			if (cmp(*Left, *Piv))
+			{
+				++Left;
+			}
+			else
+			{
+				--Right;
+				while ((Left != Right) && cmp(*Piv, *Right))
+				{
+					--Right;
+				}
+				if (Left != Right)
+				{
+					std::swap(*Left, *Right);
+				}
+			}
+		}
+		--Left;
+		std::iter_swap(Piv, Left);
+		qsort(beg, Left, cmp);
+		qsort(Right, end, cmp);
+	}
+}
+template <class T>
+void print(std::vector <T> vect)
+{
+	for (auto& i = vect.begin(); i != vect.end(); ++i)
 	{
 		std::cout << *i << " ";
 	}
 	std::cout << std::endl;
 }
 
-template<class It, class Cmp>
-void qsort(It begin, It end, Cmp cmp)
-{
-	It ITend = end;
-	--end;
-	It Iterator = Sorter(begin, end, cmp);
-	It ItNext = Iterator;
-	if (ItNext != end)
-	{
-		++ItNext;
-	}
-	if (begin != Iterator)
-	{
-		qsort(begin, Iterator, cmp);
-	}
-	if (ItNext!= end) 
-	{
-		qsort(ItNext, ITend, cmp);
-	}
-}
-
-template<class It, class Cmp>
-It Sorter(It begin, It end, Cmp cmp)
-{
-	It Position = begin;
-	while (true)
-	{
-		It i = end;
-		while ((Position < i) && cmp(*Position, *i))
-		{
-			--i;
-		}
-
-		if (i != Position)
-		{
-			std::swap(*Position, *i);
-		}
-		else
-		{
-			return Position;
-			break;
-		}
-		Position = i;
-		i = begin;
-		while ((Position > i) && !cmp(*Position, *i))
-		{
-			++i;
-		}
-		if (i != Position)
-		{
-			std::swap(*Position, *i);
-		}
-		else
-		{
-			return Position;
-			break;
-		}
-		Position = i;
-	}
-}
 
 int main() {
+	
 	std::vector<int> test;
-	for (int i = 0; i < 1000; ++i)
+	for (int i = 0; i < 10000; ++i)
 	{
-		test.push_back(rand()%1000);
+		test.push_back(rand() % 1000);
 	}
-	print(test.begin(), test.end());
-	qsort(test.begin(), test.end(), std::less<int>());
+	print(test);
 	std::cout << "\n------------------------\n";
-	print(test.begin(), test.end());
+
+	qsort(test.begin(), test.end(), std::less<int>());
+	print(test);
 	system("pause");
 	return 0;
 }
