@@ -25,7 +25,7 @@ void qsort(It beg, It end, Cmp cmp)
 				}
 				if (Left != Right)
 				{
-					std::swap(*Left, *Right);
+					std::iter_swap(Left, Right);
 				}
 			}
 		}
