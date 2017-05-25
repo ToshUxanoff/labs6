@@ -16,7 +16,7 @@ public:
 	using const_iterator = typename std::vector<value_type>::const_iterator;
 
 	std::vector<bool> ValVect; //Вектор значений функции
-
+	
 public:
 
 	// возвращает функцию которая равна xn с размерностью dimension
@@ -270,6 +270,7 @@ public:
 
 	reference at(size_type ind)
 	{
+		
 		return ValVect[ind];
 	}
 	const_reference at(size_type ind) const
@@ -309,14 +310,69 @@ public:
 	// возвращает значение функции
 	// пусть boolean_function задает функцию f(x, y, z)
 	// тогда функция вернет f(vars[0], vars[1], vars[2])
-	//bool operator()(const std::vector<bool>& vars) const;
-	//bool operator()(const std::initializer_list<bool> vars) const;
+	bool operator()(const std::vector<bool>& vars) const
+	{
+		size_t result = 0;
+		for (size_t i = 0; i < vars.size(); ++i)
+		{
+			result += pow(2, i)*vars[i];
+		}
+		return this->at(result);
+
+	}
+
+	bool operator()(const std::initializer_list<bool> vars) const
+	{
+		int t = 0;
+		int i = 0;
+		for (auto &it : vars)
+		{
+			t += pow(2, i)*it;
+			++i;
+		}
+		return this->at(t);
+	}
 
 
 	// T(x1, x2, ..., xN) - текущая функция
 	// operator вернет новую функцию, которая равна композиции G = T(fs[0], fs[1], ..., fs[N-1])
-	//boolean_function operator()(const std::vector<boolean_function>& fs) const;
-	//boolean_function operator()(const std::initializer_list<boolean_function> vars) const;
+	boolean_function operator()(const std::vector<boolean_function>& fs) const
+	{
+		
+		if (fs.size() == 0)
+		{
+			return boolean_function();
+		}
+
+		size_type d = 0;
+		for (auto & function : fs)
+		{
+			if (function.dimension() > d) 
+			{
+				d = function.dimension();
+			}
+		}
+
+		boolean_function result(d);
+		std::vector<bool> variables;
+		for (size_type i = 0; i < result.ValVect.size(); ++i) 
+		{
+			variables.clear();
+			for (auto & function : fs) 
+			{
+				variables.push_back(function.ValVect[i % function.size()]);
+			}
+			result.ValVect[i] = (*this)(variables);
+		}
+
+		return result;
+	}
+
+	boolean_function operator()(const std::initializer_list<boolean_function> vars) const
+	{
+		std::vector<boolean_function> fs = vars;
+		return (*this)(fs);
+	}
 
 	bool is_monotone() const
 	{
@@ -337,12 +393,12 @@ public:
 		}
 		return true;
 	}
-	bool is_symmetric() const //need test
+	bool is_symmetric() const 
 	{
 		std::vector<bool> BufVect = ValVect;
 		for (size_t i = 0; i < BufVect.size(); ++i)
 		{
-			if (BufVect[i] == BufVect[BufVect.size() - i - 1]) ///0101 - 0101 
+			if (BufVect[i] == BufVect[BufVect.size() - i - 1])
 			{
 				return false;
 			}
