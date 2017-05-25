@@ -344,16 +344,16 @@ public:
 			return boolean_function();
 		}
 
-		size_type d = 0;
+		size_t dim = 0;
 		for (auto & function : fs)
 		{
-			if (function.dimension() > d) 
+			if (function.dimension() > dim) 
 			{
-				d = function.dimension();
+				dim= function.dimension();
 			}
 		}
 
-		boolean_function result(d);
+		boolean_function result(dim);
 		std::vector<bool> variables;
 		for (size_type i = 0; i < result.ValVect.size(); ++i) 
 		{
