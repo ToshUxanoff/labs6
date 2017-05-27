@@ -270,15 +270,15 @@ public:
 
 	reference at(size_type ind)
 	{
-		if (ind > ValVect.size())
+		if (ind >= ValVect.size())
 		{
-			
+			throw std::exception("Out of range");
 		}
 		return ValVect[ind];
 	}
 	const_reference at(size_type ind) const
 	{
-		if (ind > ValVect.size())
+		if (ind >= ValVect.size())
 		{
 			throw std::exception("Out of range");
 		}
