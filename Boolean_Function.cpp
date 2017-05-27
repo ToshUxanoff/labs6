@@ -270,11 +270,18 @@ public:
 
 	reference at(size_type ind)
 	{
-		
+		if (ind > ValVect.size())
+		{
+			
+		}
 		return ValVect[ind];
 	}
 	const_reference at(size_type ind) const
 	{
+		if (ind > ValVect.size())
+		{
+			throw std::exception("Out of range");
+		}
 		return ValVect[ind];
 	}
 //
@@ -376,18 +383,20 @@ public:
 
 	bool is_monotone() const
 	{
-		bool One = false;
-		for (size_t i = 0; i < ValVect.size(); ++i)
+		if (ValVect.size() == 0)
 		{
-			if (ValVect[i] == true)
-			{
-				One = true;
-			}
-			else
-			{
-				if (One == true)
+			throw std::exception("Empty");
+		}
+		for (size_t i = 0; i < ValVect.size(); ++i) 
+		{ 
+			for (size_t j = 0; j < dimension(); ++j) 
+			{ 
+				if ((size_t(pow(2, j)) & i) == 0) 
 				{
-					return false;
+					if (ValVect[i + size_type(pow(2, j))] < ValVect[i]) 
+					{ 
+						return false;
+					}
 				}
 			}
 		}
