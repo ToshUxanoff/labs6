@@ -16,7 +16,23 @@ public:
 	using const_iterator = typename std::vector<value_type>::const_iterator;
 
 	std::vector<bool> ValVect; //Вектор значений функции
-	
+	bool FuncLength(size_t length)
+	{
+		size_t i = 0;
+		while (length)
+		{
+			i += length % 2;
+			length /= 2;
+		}
+		if (i != 1)
+		{
+			throw std::exception("Wrong size");
+		}
+		else
+		{
+			return true;
+		}
+	}
 public:
 
 	// возвращает функцию которая равна xn с размерностью dimension
@@ -106,37 +122,48 @@ public:
 //	// тогда АНФ boolean_function будет равна x + y + xy + zx + zy + zyx
 	boolean_function(const std::string& table)
 	{
-		for (size_t i = 0; i < table.size(); ++i)
+		if (FuncLength(table.size()))
 		{
-			if (table[i] == '0')
+			for (size_t i = 0; i < table.size(); ++i)
 			{
-				ValVect.push_back(0);
+				if (table[i] == '0')
+				{
+					ValVect.push_back(0);
+				}
+				else
+				{
+					ValVect.push_back(1);
+				}
+
 			}
-			else
-			{
-				ValVect.push_back(1);
-			}
-			
 		}
-		
 	}
 //
 //	// пусть table = {true, false, false, true};
 //	// тогда АНФ boolean_function будет равна x + y + 1
 	boolean_function(const std::vector<value_type>& table)
 	{
-		ValVect = table;
+		if (FuncLength(table.size()))
+		{
+			ValVect = table;
+		}
 	}
 	boolean_function(const std::initializer_list<bool> vars)
 	{
-		for (auto&a : vars)
+		if (FuncLength(vars.size()))
 		{
-			ValVect.push_back(a);
+			for (auto&a : vars)
+			{
+				ValVect.push_back(a);
+			}
 		}
 	}		////
 	boolean_function(const boolean_function& table)
 	{
-		ValVect = table.ValVect;
+		if (FuncLength(table.size()))
+		{
+			ValVect = table.ValVect;
+		}
 	}
 //
 	boolean_function& operator=(const boolean_function& rhs)
